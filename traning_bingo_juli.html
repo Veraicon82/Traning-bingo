@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Träningsbingo">
+<title>Träningsbingo – Juli–Augusti 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F4EF;
+    --surface: #FFFFFF;
+    --text: #1A1A18;
+    --text-muted: #7A7870;
+    --border: #E2DED6;
+    --blue-light: #E6F1FB; --blue-mid: #85B7EB; --blue-dark: #0C447C; --blue-done: #378ADD; --blue-done-text: #E6F1FB;
+    --green-light: #EAF3DE; --green-mid: #97C459; --green-dark: #27500A; --green-done: #639922; --green-done-text: #EAF3DE;
+    --amber-light: #FAEEDA; --amber-mid: #EF9F27; --amber-dark: #633806; --amber-done: #BA7517; --amber-done-text: #FAEEDA;
+    --pink-light: #FBEAF0; --pink-mid: #ED93B1; --pink-dark: #72243E; --pink-done: #D4537E; --pink-done-text: #FBEAF0;
+    --purple-light: #EEEDFE; --purple-mid: #AFA9EC; --purple-dark: #3C3489; --purple-done: #7F77DD; --purple-done-text: #EEEDFE;
+    --teal-reward: #E1F5EE; --teal-border: #5DCAA5; --teal-text: #085041;
+  }
+
+  html, body { min-height: 100%; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); -webkit-tap-highlight-color: transparent; }
+
+  .app { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
+  .top { margin-bottom: 20px; }
+  .month-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+  .title { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--text); line-height: 1.1; margin-bottom: 8px; }
+  .subtitle { font-size: 13px; color: var(--text-muted); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 8px; text-align: center; }
+  .stat-value { font-size: 20px; font-weight: 600; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 9px; color: var(--text-muted); line-height: 1.3; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 5px; margin-bottom: 16px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #378ADD, #7F77DD); transition: width 0.4s ease; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 10px; margin-bottom: 14px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 14px; }
+  .cell { border-radius: 8px; padding: 7px 4px; cursor: pointer; text-align: center; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 1.5px solid transparent; transition: transform 0.1s ease, opacity 0.15s; -webkit-tap-highlight-color: transparent; }
+  .cell:active { transform: scale(0.93); }
+  .cell-icon { font-size: 16px; }
+  .cell-label { font-size: 9px; font-weight: 600; line-height: 1.25; letter-spacing: 0.01em; }
+  .cell-count { font-size: 9px; border-radius: 20px; padding: 1px 6px; margin-top: 1px; font-weight: 500; }
+
+  .promenad40 { background: var(--blue-light); border-color: var(--blue-mid); }
+  .promenad40 .cell-icon, .promenad40 .cell-label { color: var(--blue-dark); }
+  .promenad40 .cell-count { background: #B5D4F4; color: var(--blue-dark); }
+  .promenad40.done { background: var(--blue-done); border-color: #185FA5; }
+  .promenad40.done .cell-icon, .promenad40.done .cell-label { color: var(--blue-done-text); }
+  .promenad40.done .cell-count { background: #185FA5; color: var(--blue-done-text); }
+
+  .promenad20 { background: var(--green-light); border-color: var(--green-mid); }
+  .promenad20 .cell-icon, .promenad20 .cell-label { color: var(--green-dark); }
+  .promenad20 .cell-count { background: #C0DD97; color: var(--green-dark); }
+  .promenad20.done { background: var(--green-done); border-color: #3B6D11; }
+  .promenad20.done .cell-icon, .promenad20.done .cell-label { color: var(--green-done-text); }
+  .promenad20.done .cell-count { background: #3B6D11; color: var(--green-done-text); }
+
+  .styrka { background: var(--amber-light); border-color: var(--amber-mid); }
+  .styrka .cell-icon, .styrka .cell-label { color: var(--amber-dark); }
+  .styrka .cell-count { background: #FAC775; color: var(--amber-dark); }
+  .styrka.done { background: var(--amber-done); border-color: #854F0B; }
+  .styrka.done .cell-icon, .styrka.done .cell-label { color: var(--amber-done-text); }
+  .styrka.done .cell-count { background: #854F0B; color: var(--amber-done-text); }
+
+  .rorlighet { background: var(--pink-light); border-color: var(--pink-mid); }
+  .rorlighet .cell-icon, .rorlighet .cell-label { color: var(--pink-dark); }
+  .rorlighet .cell-count { background: #F4C0D1; color: var(--pink-dark); }
+  .rorlighet.done { background: var(--pink-done); border-color: #993556; }
+  .rorlighet.done .cell-icon, .rorlighet.done .cell-label { color: var(--pink-done-text); }
+  .rorlighet.done .cell-count { background: #993556; color: var(--pink-done-text); }
+
+  .valfri { background: var(--purple-light); border-color: var(--purple-mid); }
+  .valfri .cell-icon, .valfri .cell-label { color: var(--purple-dark); }
+  .valfri .cell-count { background: #CECBF6; color: var(--purple-dark); }
+  .valfri.done { background: var(--purple-done); border-color: #534AB7; }
+  .valfri.done .cell-icon, .valfri.done .cell-label { color: var(--purple-done-text); }
+  .valfri.done .cell-count { background: #534AB7; color: var(--purple-done-text); }
+
+  .reward { display: none; background: var(--teal-reward); border: 1px solid var(--teal-border); border-radius: 12px; padding: 14px 16px; margin-bottom: 14px; font-size: 14px; font-weight: 500; color: var(--teal-text); text-align: center; }
+  .reward.show { display: block; }
+
+  .footer { display: flex; justify-content: space-between; align-items: center; }
+  .reset-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 7px 14px; cursor: pointer; }
+  .footer-note { font-size: 11px; color: var(--text-muted); }
+  .icon { font-style: normal; font-size: 15px; line-height: 1; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <p class="month-label">1 juli – 9 augusti 2026</p>
+    <h1 class="title">Tränings&shy;bingo</h1>
+    <p class="subtitle">Tryck på en ruta för att markera den som klar.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-value" id="stat-done">0</div><div class="stat-label">Avklarade pass</div></div>
+    <div class="stat"><div class="stat-value" id="stat-rows">0</div><div class="stat-label">Ifyllda rader</div></div>
+    <div class="stat"><div class="stat-value" id="stat-passed">–</div><div class="stat-label">Dagar gångna</div></div>
+    <div class="stat"><div class="stat-value" id="stat-remaining">–</div><div class="stat-label">Dagar kvar</div></div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-bar" style="width: 0%"></div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#378ADD"></div>Promenad 40 min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#639922"></div>Promenad 20 min</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#BA7517"></div>Styrka</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#D4537E"></div>Rörlighet</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7F77DD"></div>Valfritt</div>
+  </div>
+
+  <div class="reward" id="reward">🎉 Två rader klara – du förtjänar en belöning!</div>
+  <div class="grid" id="grid"></div>
+
+  <div class="footer">
+    <button class="reset-btn" id="reset-btn">↺ Nollställ</button>
+    <span class="footer-note" id="footer-date"></span>
+  </div>
+</div>
+<script>
+const CELLS = [
+  { id:'p40_1', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'styrka_1', label:'Styrke-\npass', icon:'💪', goal:4, type:'styrka' },
+  { id:'p40_2', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'rorl_1', label:'Rörlig-\nhet', icon:'🧘', goal:4, type:'rorlighet' },
+  { id:'p20_1', label:'Promenad\n20 min', icon:'🚶', goal:5, type:'promenad20' },
+  { id:'valfri_1', label:'Valfritt\n15 min', icon:'⚡', goal:4, type:'valfri' },
+  { id:'p40_3', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'rorl_2', label:'Rörlig-\nhet', icon:'🧘', goal:4, type:'rorlighet' },
+  { id:'styrka_2', label:'Styrke-\npass', icon:'💪', goal:4, type:'styrka' },
+  { id:'p40_4', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'p20_2', label:'Promenad\n20 min', icon:'🚶', goal:5, type:'promenad20' },
+  { id:'valfri_2', label:'Valfritt\n15 min', icon:'⚡', goal:4, type:'valfri' },
+  { id:'p40_5', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'valfri_3', label:'Valfritt\n15 min', icon:'⚡', goal:4, type:'valfri' },
+  { id:'rorl_3', label:'Rörlig-\nhet', icon:'🧘', goal:4, type:'rorlighet' },
+  { id:'styrka_3', label:'Styrke-\npass', icon:'💪', goal:4, type:'styrka' },
+  { id:'p40_6', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'p20_3', label:'Promenad\n20 min', icon:'🚶', goal:5, type:'promenad20' },
+  { id:'rorl_4', label:'Rörlig-\nhet', icon:'🧘', goal:4, type:'rorlighet' },
+  { id:'p40_7', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'p20_4', label:'Promenad\n20 min', icon:'🚶', goal:5, type:'promenad20' },
+  { id:'p40_8', label:'Promenad\n40 min', icon:'🚶', goal:8, type:'promenad40' },
+  { id:'valfri_4', label:'Valfritt\n15 min', icon:'⚡', goal:4, type:'valfri' },
+  { id:'styrka_4', label:'Styrke-\npass', icon:'💪', goal:4, type:'styrka' },
+  { id:'p20_5', label:'Promenad\n20 min', icon:'🚶', goal:5, type:'promenad20' },
+];
+
+const KEY = 'bingo_juli_2025';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) {}
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+function countDone() { return Object.values(state).filter(Boolean).length; }
+function countRows() {
+  let n = 0;
+  for (let r = 0; r < 5; r++) {
+    if (CELLS.slice(r*5, r*5+5).every(c => state[c.id])) n++;
+  }
+  return n;
+}
+
+function updateCalendar() {
+  const now = new Date();
+  const start = new Date(2026, 6, 1);  // 1 juli
+  const end = new Date(2026, 7, 9);    // 9 augusti
+  const totalDays = 40;
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  let passed, remaining;
+
+  if (now < start) {
+    passed = 0;
+    remaining = totalDays;
+  } else if (now > end) {
+    passed = totalDays;
+    remaining = 0;
+  } else {
+    passed = Math.floor((now - start) / msPerDay);
+    remaining = Math.max(0, Math.ceil((end - now) / msPerDay));
+  }
+
+  document.getElementById('stat-passed').textContent = passed;
+  document.getElementById('stat-remaining').textContent = remaining;
+  const months = ['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+  document.getElementById('footer-date').textContent = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const typeProgress = {};
+  CELLS.forEach(c => { if (state[c.id]) typeProgress[c.type] = (typeProgress[c.type]||0)+1; });
+
+  CELLS.forEach(c => {
+    const done = !!state[c.id];
+    const progress = typeProgress[c.type] || 0;
+    const el = document.createElement('div');
+    el.className = 'cell ' + c.type + (done ? ' done' : '');
+    const lines = c.label.split('\n');
+    el.innerHTML = `<span class="icon">${done ? '✓' : c.icon}</span><div class="cell-label">${lines.join('<br>')}</div><div class="cell-count">${progress}/${c.goal}</div>`;
+    el.addEventListener('click', () => { state[c.id] = !state[c.id]; save(); render(); });
+    grid.appendChild(el);
+  });
+
+  const done = countDone();
+  const rows = countRows();
+  document.getElementById('stat-done').textContent = done;
+  document.getElementById('stat-rows').textContent = rows;
+  document.getElementById('progress-bar').style.width = Math.round((done/25)*100) + '%';
+  document.getElementById('reward').classList.toggle('show', rows >= 2);
+  updateCalendar();
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (confirm('Nollställa hela bingot?')) { state = {}; save(); render(); }
+});
+
+render();
+</script>
+</body>
+</html>
